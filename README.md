@@ -83,7 +83,7 @@ Categoría
 └── horarios
 ```
 
-Los horarios estarán definidos dentro de la propia categoría, sin crear una entidad independiente para los mismos.
+Los horarios estarán definidos dentro de la propia categoría.
 
 Ejemplos:
 
@@ -126,8 +126,6 @@ Visita
 └── hora
 ```
 
-No se almacenará `horaFin`, ya que el horario completo de las actividades estará definido en la categoría.
-
 #### Sala de musculación
 
 La sala no requiere una reserva previa.
@@ -164,7 +162,7 @@ No se manejarán cupos máximos para las actividades.
 
 ### Plan Plus
 
-Los usuarios Plus podrán realizar un máximo de **4 visitas por mes**.
+Los usuarios Plus podrán realizar un máximo de **4 visitas por semana**.
 
 Todas las visitas cuentan para el límite:
 
@@ -184,7 +182,7 @@ Ejemplo:
 4 → Sala de musculación
 ```
 
-Una quinta visita durante el mismo mes será rechazada.
+Una quinta visita durante la misma semana será rechazada.
 
 ### Plan Premium
 
@@ -202,7 +200,7 @@ Una reserva deberá:
 2. Utilizar uno de los horarios definidos para dicha categoría.
 3. Tener una fecha válida.
 4. Realizarse con una anticipación mínima de 12 horas.
-5. Respetar el límite mensual del usuario cuando corresponda.
+5. Respetar el límite semanal del usuario cuando corresponda.
 
 Las reservas podrán darse de baja mientras falten más de 12 horas para el inicio de la actividad.
 
