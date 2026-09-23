@@ -36,7 +36,6 @@ Representa a la persona que utiliza la aplicación.
 
 ```text
 Usuario
-├── _id
 ├── username
 ├── password
 ├── tipoUsuario
@@ -78,7 +77,6 @@ La entidad tendrá:
 
 ```text
 Categoría
-├── _id
 ├── nombre
 └── horarios
 ```
@@ -119,7 +117,6 @@ Representa tanto un acceso a la sala de musculación como una reserva para una a
 
 ```text
 Visita
-├── _id
 ├── usuarioId
 ├── categoriaId
 ├── fecha
