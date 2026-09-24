@@ -9,6 +9,7 @@ export const obtenerVisitasService = async (limit, page) => {
     return {visitas, limit, page, totalPages};
 };
 
+// Generar logica del alta de visita controlando el maximo de 4 por semana siempre que sea usuario plus
 export const crearVisitaService = async (visitaData) => {
     const productoBuscado = await Producto.findOne({ nombre: productoData.nombre });
     if (productoBuscado) {
@@ -31,6 +32,12 @@ export const obtenerVisitaPorIdService = async (id) => {
     }
     const visita = await Visita.findById(id);
     return visita;
+}
+
+export const actualizarVisitaService = async (id, visita) => {
+  
+    const visitaActualizada = await Visita.findByIdAndUpdate(id, visita, { returnDocument: "after" });
+    return visitaActualizada;
 }
 
 export const eliminarVisitaService = async (id) => {
