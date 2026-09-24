@@ -31,6 +31,7 @@ export const obtenerProductoPorIdService = async (id) => {
     const producto = await Producto.findById(id);
     return producto;
 }
+
 export const actualizarProductoService = async (id, producto) => {
   
     const productoActualizado = await Producto.findByIdAndUpdate(id, producto, { returnDocument: "after" });
