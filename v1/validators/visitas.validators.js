@@ -7,22 +7,57 @@ const objectId = Joi.string().hex().length(24).messages({
 });
 
 export const crearVisitaSchema = Joi.object({
-  nombre: Joi.string().trim().required().min(2).max(50).messages({
-    'string.empty': 'El nombre del tesoro no puede estar vacío',
-    'any.required': 'El nombre del tesoro es obligatorio',
+
+  categoriaId: objectId.required().messages({
+    'any.required': 'La categoría es obligatoria',
   }),
-  tipo: Joi.string().trim().max(30),
-  valor: Joi.number().min(0).messages({
-    'number.base': 'El valor debe ser un número',
-    'number.min': 'El valor no puede ser negativo',
-  }),
+
+  fecha: Joi.string()
+    .trim()
+    .pattern(/^\d{4}-\d{2}-\d{2}$/)
+    .required()
+    .messages({
+      'string.empty': 'La fecha no puede estar vacía',
+      'string.pattern.base': 'La fecha debe tener el formato YYYY-MM-DD',
+      'any.required': 'La fecha es obligatoria',
+    }),
+
+  hora: Joi.string()
+    .trim()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .required()
+    .messages({
+      'string.empty': 'La hora no puede estar vacía',
+      'string.pattern.base': 'La hora debe tener el formato HH:mm',
+      'any.required': 'La hora es obligatoria',
+    }),
+
 });
 
-export const tesoroIdParamSchema = Joi.object({
+export const visitaIdParamSchema = Joi.object({
   id: objectId.required(),
 });
 
-// Usado en la ruta anidada /dragones/:dragonId/tesoros
-export const dragonIdParamSchema = Joi.object({
-  dragonId: objectId.required(),
+export const modificarVisitaSchema = Joi.object({
+
+  fecha: Joi.string()
+    .trim()
+    .pattern(/^\d{4}-\d{2}-\d{2}$/)
+    .required()
+    .messages({
+      'string.empty': 'La fecha no puede estar vacía',
+      'string.pattern.base': 'La fecha debe tener el formato YYYY-MM-DD',
+      'any.required': 'La fecha es obligatoria',
+    }),
+
+  hora: Joi.string()
+    .trim()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .required()
+    .messages({
+      'string.empty': 'La hora no puede estar vacía',
+      'string.pattern.base': 'La hora debe tener el formato HH:mm',
+      'any.required': 'La hora es obligatoria',
+    }),
+
 });

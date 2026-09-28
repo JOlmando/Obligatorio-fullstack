@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-const SECRET_KEY = 'mi_clave_secreta';
 
 
 export const authenticateMiddleware = (req, res, next) => {
@@ -14,7 +13,7 @@ export const authenticateMiddleware = (req, res, next) => {
         return res.status(401).json({ message: 'Token inválido' });
     }
     
-        jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
                 return res.status(401).json({ message: 'Token inválido' });
             }

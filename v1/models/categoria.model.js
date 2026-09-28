@@ -1,10 +1,18 @@
 import mongoose from "mongoose";
 
 const categoriaSchema = new mongoose.Schema({
-    nombre: { type: String, required: true, unique: true },
-    horarios: { type: String, required: true }
+    nombre: { 
+        type: String, 
+        required: true, 
+        unique: true 
+    },
+
+    horarios: { 
+        type: String, 
+        required: true 
+    }
 });
 
-const Categoria = mongoose.model("Categoria", categoriaSchema);
+const Categoria = mongoose.model("Categoria", categoriaSchema, "categorias");
 
-export default CAtegoria;
+export default Categoria;

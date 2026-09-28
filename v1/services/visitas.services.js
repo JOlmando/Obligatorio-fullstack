@@ -5,23 +5,24 @@ export const obtenerVisitasService = async (limit, page) => {
     page = Number(page) || 1;
     const skip = (page - 1) * limit;
     const totalPages = Math.ceil(await Visita.countDocuments() / limit);
-    const visitas = await Tesoro.find().skip(skip).limit(limit);
+    const visitas = await Visita.find().skip(skip).limit(limit);
     return {visitas, limit, page, totalPages};
 };
 
 // Generar logica del alta de visita controlando el maximo de 4 por semana siempre que sea usuario plus
 export const crearVisitaService = async (visitaData) => {
-    const productoBuscado = await Producto.findOne({ nombre: productoData.nombre });
-    if (productoBuscado) {
-        const error = new Error("El producto ya existe");
+    const visitaBuscada = await Visita.findOne({ nombre: visitaData.nombre });
+    if (visitaBuscada) {
+        const error = new Error("La visita ya existe");
         error.status = 400;
-        error.details = { productoData };
+        error.details = { visitaData };
         throw error;
     }
-    const producto = new Producto(productoData);
-    await producto.save();
-    return producto;
+    const visita = new Visita(visitaData);
+    await visita.save();
+    return visita;
 }
+
 
 export const obtenerVisitaPorIdService = async (id) => {
     if(!mongoose.isValidObjectId(id)) {
@@ -57,3 +58,8 @@ export const eliminarVisitaService = async (id) => {
     const visita = await Visita.findByIdAndDelete(id);
     return visita;
 }
+
+// export const obtenerVisitasFechasService = async (min, max) => {
+//     const visitas = await Visita.find({ fechas: { $gte: min, $lte: max } });
+//     return visitas;
+// }

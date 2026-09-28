@@ -16,6 +16,7 @@ export const crearVisita = async (req, res) => {
     const visita = await crearVisitaService({ nombre, precio, descripcion });
     res.status(201).json(visita);
 }
+
 export const obtenerVisitaPorId = async (req, res) => {
     const { id } = req.params;
     const visita = await obtenerVisitaPorIdService(id);
@@ -28,9 +29,15 @@ export const actualizarVisita = async (req, res) => {
     res.json(visita);
 }
 
-export const visitaProducto = async (req, res) => {
+export const eliminarVisita = async (req, res) => {
     const { id } = req.params;
     const visita = await eliminarVisitaService(id);
     res.json(visita);
 }
+
+// export const obtenerVisitasFechas = async (req, res) => {
+//     const { min, max } = req.query;
+//     const visitas = await obtenerProductosXRangoPrecioService(min, max);
+//     res.json(visitas);
+// }
 
