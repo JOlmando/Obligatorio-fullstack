@@ -45,7 +45,7 @@ Usuario
 Tipos de usuario:
 
 ```text
-USUARIO
+CLIENTE
 ADMIN
 ```
 
