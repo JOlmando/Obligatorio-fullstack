@@ -10,13 +10,22 @@ export const loginSchema = Joi.object({
 
 export const registerSchema = Joi.object({
   username: Joi.string().min(3).max(30).required(),
-  password: Joi.string().min(6).max(30).required().messages({
-    'string.min': 'La contraseña debe tener al menos {#limit} caracteres',
-    'string.max': 'La contraseña no puede tener más de {#limit} caracteres',
-    'any.required': 'La contraseña es obligatoria'
-  }),
-  confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
-    'any.only': 'Las contraseñas no coinciden',
-    'any.required': 'La confirmación de la contraseña es obligatoria'
-  })
+  password: Joi.string()
+    .min(6)
+    .max(30)
+    .required()
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[a-zA-Z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,30}$/)
+    .messages({
+      'string.min': 'La contraseña debe tener al menos {#limit} caracteres',
+      'string.max': 'La contraseña no puede tener más de {#limit} caracteres',
+      'string.pattern.base': 'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&)',
+      'any.required': 'La contraseña es obligatoria'
+    }),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref('password'))
+    .required()
+    .messages({
+      'any.only': 'Las contraseñas no coinciden',
+      'any.required': 'La confirmación de la contraseña es obligatoria'
+    })
 });

@@ -10,14 +10,13 @@ const usuarioSchema = new mongoose.Schema({
     password: { 
         type: String, 
         required: true },
+
     tipoUsuario: { 
-        type: String, 
-        required: true
+        type: String
     },
     
     plan: { 
-        type: String, 
-        required: true 
+        type: String
     }
 });
 

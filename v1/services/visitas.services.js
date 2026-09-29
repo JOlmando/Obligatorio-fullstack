@@ -1,4 +1,5 @@
 import Visita from "../models/visita.model.js";
+import Usuario from "../models/usuario.model.js";
 
 export const obtenerVisitasService = async (limit, page) => {
     limit = Number(limit) || 3;
@@ -10,18 +11,93 @@ export const obtenerVisitasService = async (limit, page) => {
 };
 
 // Generar logica del alta de visita controlando el maximo de 4 por semana siempre que sea usuario plus
+export const verificarLimiteSemanal = async (usuarioId, fecha) => {
+
+    const usuario = await Usuario.findById(usuarioId);
+
+    if (!usuario) {
+        throw new Error("Usuario no encontrado");
+    }
+
+    // Si es Premium, no tiene límite
+    if (usuario.plan === "PREMIUM") {
+        return true;
+    }
+
+    // Convertimos la fecha recibida a Date
+    const fechaVisita = new Date(`${fecha}T00:00:00-03:00`);
+    const diaSemana = fechaVisita.getDay();
+
+    // Calculamos cuántos días hay que retroceder
+    // para llegar al lunes
+    const diasDesdeLunes = diaSemana === 0
+        ? 6
+        : diaSemana - 1;
+
+    // Obtenemos el lunes de esa semana
+    const inicioSemana = new Date(fechaVisita);
+
+    inicioSemana.setDate(
+        inicioSemana.getDate() - diasDesdeLunes
+    );
+
+    // El fin de la semana será el lunes siguiente
+    const finSemana = new Date(inicioSemana);
+
+    finSemana.setDate(
+        finSemana.getDate() + 7
+    );
+
+    // Convertimos nuevamente a YYYY-MM-DD
+    const fechaInicio = inicioSemana
+        .toISOString()
+        .slice(0, 10);
+
+    const fechaFin = finSemana
+        .toISOString()
+        .slice(0, 10);
+
+    // Contamos las visitas de ese usuario
+    // entre lunes y domingo
+    const cantidadVisitas = await Visita.countDocuments({
+        usuarioId,
+        fecha: {
+            $gte: fechaInicio,
+            $lt: fechaFin
+        }
+    });
+
+    // Si tiene menos de 4, puede crear otra
+    return cantidadVisitas < 4;
+};
+
+
 export const crearVisitaService = async (visitaData) => {
-    const visitaBuscada = await Visita.findOne({ nombre: visitaData.nombre });
-    if (visitaBuscada) {
-        const error = new Error("La visita ya existe");
-        error.status = 400;
-        error.details = { visitaData };
+
+    const puedeCrear = await verificarLimiteSemanal(
+        visitaData.usuarioId,
+        visitaData.fecha
+    );
+
+    if (!puedeCrear) {
+
+        const error = new Error(
+            "El usuario alcanzó el límite de 4 visitas semanales del plan Plus"
+        );
+
+        error.statusCode = 403;
+        error.code = "WEEKLY_LIMIT_REACHED";
+
         throw error;
     }
+
+
     const visita = new Visita(visitaData);
+
     await visita.save();
+
     return visita;
-}
+};
 
 
 export const obtenerVisitaPorIdService = async (id) => {
@@ -52,7 +128,8 @@ export const eliminarVisitaService = async (id) => {
 
     if (diferenciaMs < doceHorasMs) {
         return res.status(400).json({
-            mensaje: "No se puede cancelar la reserva con menos de 12 horas de anticipación"
+            status_code: 400,
+            message: "No se puede cancelar la reserva con menos de 12 horas de anticipación"
         });
     }
     const visita = await Visita.findByIdAndDelete(id);

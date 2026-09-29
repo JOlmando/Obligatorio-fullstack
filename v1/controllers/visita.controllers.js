@@ -5,17 +5,27 @@ import {
     actualizarVisitaService,
     eliminarVisitaService } from "../services/visitas.services.js";
 
+import {actualizarCategoria} from "../controllers/categoria.controller.js"
+
 export const obtenerVisitas = async (req, res) => {
-    const visitas = await obtenerVisitasService();
+    const { limit, page } = req.query;
+    const visitas = await obtenerVisitasService(limit, page);
     res.json(visitas);
 }
 
 // Generar logica de visitas
 export const crearVisita = async (req, res) => {
-    const { nombre, precio, descripcion } = req.body;
-    const visita = await crearVisitaService({ nombre, precio, descripcion });
+    const { categoriaId, fecha, hora } = req.body;
+    const usuarioId = req.usuario.id;
+    const visita = await crearVisitaService({
+        usuarioId,
+        categoriaId,
+        fecha,
+        hora
+    });
+    await actualizarCategoria(categoriaId);
     res.status(201).json(visita);
-}
+};
 
 export const obtenerVisitaPorId = async (req, res) => {
     const { id } = req.params;

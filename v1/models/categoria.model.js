@@ -10,6 +10,10 @@ const categoriaSchema = new mongoose.Schema({
     horarios: { 
         type: String, 
         required: true 
+    },
+    
+    enUso: {
+        type: Boolean
     }
 });
 
