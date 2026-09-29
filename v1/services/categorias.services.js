@@ -67,7 +67,7 @@ export const eliminarCategoriaService = async (id) => {
     return categoriaEliminada;
 };
 
-export const actualizarEnUsoCategoriaServices = async (categoriaId) => {
+export const actualizarEnUsoCategoriaService = async (categoriaId) => {
     const existeVisita = await Visita.exists({
         categoriaId
     });

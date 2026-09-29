@@ -5,17 +5,18 @@ import { visitaIdParamSchema, crearVisitaSchema, modificarVisitaSchema } from ".
 
 import { 
     crearVisita,
-    obtenerVisitaPorId,
-    obtenerVisitas,
+    obtenerVisitaByIdUser,
+    obtenerVisitasFechas,
     actualizarVisita,
     eliminarVisita } from "../controllers/visita.controllers.js";
 
 const router = express.Router();
 
-router.get("/", obtenerVisitas);
+//router.get("/", obtenerVisitas);
+router.get("/", obtenerVisitaByIdUser);
+router.get("/fechas", obtenerVisitasFechas);
 router.post("/", validateBodyMiddleware(crearVisitaSchema), crearVisita);
-router.get("/:id", validateParamsMiddleware(visitaIdParamSchema), obtenerVisitaPorId);
-router.patch("/:id", validateBodyMiddleware(modificarVisitaSchema), actualizarVisita);
+router.put("/:id", validateBodyMiddleware(modificarVisitaSchema), actualizarVisita);
 router.delete("/:id", validateParamsMiddleware(visitaIdParamSchema), eliminarVisita);
 
 

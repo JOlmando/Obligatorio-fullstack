@@ -14,13 +14,11 @@ const visitaSchema = new mongoose.Schema({
     },
 
     fecha: {
-        type: String,
-        required: true
+        type: String
     },
 
     hora: {
-        type: String,
-        required: true
+        type: String
     }
 });
 

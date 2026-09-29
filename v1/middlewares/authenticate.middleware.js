@@ -18,7 +18,7 @@ export const authenticateMiddleware = (req, res, next) => {
                 return res.status(401).json({ message: 'Token inválido' });
             }
             // Si el token es válido, se adjunta la información del usuario a la solicitud
-            req.decoded = decoded;
+            req.user = decoded;
             next();
         });
     

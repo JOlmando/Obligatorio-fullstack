@@ -2,7 +2,7 @@ import {
     obtenerCategoriasService,
     actualizarCategoriaService,
     eliminarCategoriaService,
-    actualizarEnUsoCategoriaServices
+    actualizarEnUsoCategoriaService
 } from "../services/categorias.services.js";
 
 export const obtenerCategorias = async (req, res) => {
@@ -27,6 +27,6 @@ export const eliminarCategoria = async (req, res) => {
 
 export const actualizarEnUsoCategoria= async (req, res) => {
     const { id } = req.params;
-    const categoria = await actualizarEnUsoCategoriaServices(id);
+    const categoria = await actualizarEnUsoCategoriaService(id);
     res.json(categoria);
 }

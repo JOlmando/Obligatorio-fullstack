@@ -15,7 +15,6 @@ export const crearVisitaSchema = Joi.object({
   fecha: Joi.string()
     .trim()
     .pattern(/^\d{4}-\d{2}-\d{2}$/)
-    .required()
     .messages({
       'string.empty': 'La fecha no puede estar vacía',
       'string.pattern.base': 'La fecha debe tener el formato YYYY-MM-DD',
@@ -24,12 +23,11 @@ export const crearVisitaSchema = Joi.object({
 
   hora: Joi.string()
     .trim()
-    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-    .required()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/)
     .messages({
-      'string.empty': 'La hora no puede estar vacía',
-      'string.pattern.base': 'La hora debe tener el formato HH:mm',
-      'any.required': 'La hora es obligatoria',
+        'string.empty': 'La hora no puede estar vacía',
+        'string.pattern.base': 'La hora debe tener el formato HH:mm-HH:mm',
+        'any.required': 'La hora es obligatoria',
     }),
 
 });
@@ -40,10 +38,13 @@ export const visitaIdParamSchema = Joi.object({
 
 export const modificarVisitaSchema = Joi.object({
 
+  categoriaId: objectId.required().messages({
+    'any.required': 'La categoría es obligatoria',
+  }),
+
   fecha: Joi.string()
     .trim()
     .pattern(/^\d{4}-\d{2}-\d{2}$/)
-    .required()
     .messages({
       'string.empty': 'La fecha no puede estar vacía',
       'string.pattern.base': 'La fecha debe tener el formato YYYY-MM-DD',
@@ -52,12 +53,11 @@ export const modificarVisitaSchema = Joi.object({
 
   hora: Joi.string()
     .trim()
-    .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
-    .required()
+    .pattern(/^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/)
     .messages({
-      'string.empty': 'La hora no puede estar vacía',
-      'string.pattern.base': 'La hora debe tener el formato HH:mm',
-      'any.required': 'La hora es obligatoria',
+        'string.empty': 'La hora no puede estar vacía',
+        'string.pattern.base': 'La hora debe tener el formato HH:mm-HH:mm',
+        'any.required': 'La hora es obligatoria',
     }),
 
 });
