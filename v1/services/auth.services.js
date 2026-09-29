@@ -17,7 +17,7 @@ export const loginService = async (username, password) => {
         error.details = { username };
         throw error;
     }
-    const token = jwt.sign({ usuario: username, tipoUsuario: usuario.tipoUsuario }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ usuario: username, tipoUsuario: usuario.tipoUsuario, _id: usuario._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
     return { usuario, token };
 };
 
@@ -31,7 +31,7 @@ export const registerService = async (username, password) => {
     }
     const hashedPassword = bcrypt.hashSync(password, Number(process.env.ROUND));
     const usuario = new Usuario({ username, password: hashedPassword, tipoUsuario: "CLIENTE", plan: "PLUS"});
-    const token = jwt.sign({ usuario: username, tipoUsuario:"CLIENTE" }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ usuario: username, tipoUsuario:"CLIENTE", _id: usuario._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
     await usuario.save();
     return { usuario, token };
 }

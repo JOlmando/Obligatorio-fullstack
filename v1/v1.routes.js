@@ -9,13 +9,12 @@ const router = express.Router({mergeParams: true});
 //Rutas públicas Login y Registro
 router.use('/auth', authRouter);
 
-router.use('/categorias', categoriasRouter);
-
 //middleware para verificacion de token
 
-//router.use(authenticateMiddleware);
+router.use(authenticateMiddleware);
 
 //Rutas protegidas
-router.use("/visitas", visitasRouter); // Agregamos la ruta de productos
+router.use("/visitas", visitasRouter); 
+router.use('/categorias', categoriasRouter);
 
  export default router;

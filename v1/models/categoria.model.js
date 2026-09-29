@@ -13,7 +13,8 @@ const categoriaSchema = new mongoose.Schema({
     },
     
     enUso: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 });
 

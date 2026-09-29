@@ -20,6 +20,6 @@ const rutinaSchema = new mongoose.Schema({
 
 });
 
-const Rutina = mongoose.model("Rutina", rutinaSchema);
+const Rutina = mongoose.model("Rutina", rutinaSchema, "rutinas");
 
 export default Rutina;

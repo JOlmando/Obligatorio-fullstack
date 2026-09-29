@@ -24,7 +24,7 @@ const visitaSchema = new mongoose.Schema({
     }
 });
 
-const Visita = mongoose.model("Visita", visitaSchema);
+const Visita = mongoose.model("Visita", visitaSchema, "visitas");
 
 export default Visita;
 

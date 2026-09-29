@@ -80,17 +80,14 @@ export const crearVisitaService = async (visitaData) => {
     );
 
     if (!puedeCrear) {
-
         const error = new Error(
             "El usuario alcanzó el límite de 4 visitas semanales del plan Plus"
         );
-
         error.statusCode = 403;
         error.code = "WEEKLY_LIMIT_REACHED";
 
         throw error;
     }
-
 
     const visita = new Visita(visitaData);
 

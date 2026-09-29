@@ -3,9 +3,9 @@ import {
     obtenerVisitaPorIdService,
     obtenerVisitasService,
     actualizarVisitaService,
-    eliminarVisitaService } from "../services/visitas.services.js";
+    eliminarVisitaService, } from "../services/visitas.services.js";
 
-import {actualizarCategoria} from "../controllers/categoria.controller.js"
+import {actualizarEnUsoCategoriaServices} from "../services/categorias.services.js"
 
 export const obtenerVisitas = async (req, res) => {
     const { limit, page } = req.query;
@@ -16,14 +16,14 @@ export const obtenerVisitas = async (req, res) => {
 // Generar logica de visitas
 export const crearVisita = async (req, res) => {
     const { categoriaId, fecha, hora } = req.body;
-    const usuarioId = req.usuario.id;
+    const usuarioId = req.decoded._id; // Obtener el ID del usuario desde el token de autenticación
     const visita = await crearVisitaService({
         usuarioId,
         categoriaId,
         fecha,
         hora
     });
-    await actualizarCategoria(categoriaId);
+    await actualizarEnUsoCategoriaServices(categoriaId);
     res.status(201).json(visita);
 };
 
