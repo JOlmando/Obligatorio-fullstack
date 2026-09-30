@@ -11,7 +11,7 @@ yarn-error.log*
 Thumbs.db
 
 # Variables de entorno
-# .env
+.env
 
 # Cobertura de tests
 coverage/
