@@ -31,7 +31,6 @@ export const actualizarCategoria = async (req, res) => {
         id,
         req.body
     );
-
     res.status(200).json(categoria);
 };
 

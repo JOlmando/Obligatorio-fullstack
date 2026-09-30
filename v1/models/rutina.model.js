@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const rutinaSchema = new mongoose.Schema({
 
-    usuarioId: {
+    userid: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Usuario",
         required: true
@@ -20,6 +20,6 @@ const rutinaSchema = new mongoose.Schema({
 
 });
 
-const Rutina = mongoose.model("Rutina", rutinaSchema, "rutinas");
+const Rutina = mongoose.model("Rutina", rutinaSchema);
 
 export default Rutina;
