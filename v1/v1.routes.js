@@ -3,6 +3,7 @@ import authRouter from './routes/auth.routes.js';
 import { authenticateMiddleware } from './middlewares/authenticate.middleware.js';
 import visitasRouter from './routes/visitas.routes.js';
 import categoriasRouter from './routes/categorias.routes.js';
+import usuarioRouter from './routes/usuario.routes.js';
 
 const router = express.Router({mergeParams: true});
 
@@ -16,5 +17,7 @@ router.use(authenticateMiddleware);
 //Rutas protegidas
 router.use("/visitas", visitasRouter); 
 router.use('/categorias', categoriasRouter);
+router.use('/usuarios', usuarioRouter);
+
 
  export default router;

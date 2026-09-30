@@ -12,7 +12,6 @@ import {
 
 const router = express.Router();
 
-//router.get("/", obtenerVisitas);
 router.get("/", obtenerVisitaByIdUser);
 router.get("/fechas", obtenerVisitasFechas);
 router.post("/", validateBodyMiddleware(crearVisitaSchema), crearVisita);

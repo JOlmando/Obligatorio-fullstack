@@ -1,18 +1,22 @@
 import express from "express";
+import { verificarAdmin } from "../middlewares/authenticate.middleware.js";
+import { validateBodyMiddleware } from "../middlewares/validateBody.middleware.js";
 import { validateParamsMiddleware } from "../middlewares/validateParams.middleware.js";
-import { visitaIdParamSchema, crearVisitaSchema, modificarVisitaSchema } from "../validators/visitas.validators.js";
+import { crearCategoriaSchema, categoriaIdParamSchema } from "../validators/categorias.validators.js";
 
 import { 
-    obtenerCategorias
+    obtenerCategorias,
+    crearCategoria,
+    actualizarCategoria,
+    eliminarCategoria
 } from "../controllers/categoria.controller.js";
 
 const router = express.Router();
 
-router.get("/", obtenerCategorias);
-// router.post("/", validateParamsMiddleware(crearCategoriaSchema), crearCategoria);
-// router.get("/:id", validateParamsMiddleware(categoriaIdParamSchema), obtenerCategoriaPorId);
-// router.patch("/:id", validateParamsMiddleware(modificarCategoriaSchema), actualizarCategoria);
-// router.delete("/:id", validateParamsMiddleware(categoriaIdParamSchema), eliminarCategoria);
+router.get("/", obtenerCategorias); 
+router.post("/", verificarAdmin, validateBodyMiddleware(crearCategoriaSchema), crearCategoria);
+router.patch("/:id", verificarAdmin, validateBodyMiddleware(crearCategoriaSchema), actualizarCategoria);
+router.delete("/:id", verificarAdmin, validateParamsMiddleware(categoriaIdParamSchema), eliminarCategoria);
 
 
 export default router;

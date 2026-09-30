@@ -23,6 +23,20 @@ export const obtenerCategoriasService = async (limit, page) => {
     };
 };
 
+export const crearCategoriaService = async (nombre, horarios, enUso = false) => {
+    try {
+        const categoria = await Categoria.create({ nombre, horarios, enUso });
+        return categoria;
+    } catch (error) {
+        if (error.code === 11000) {
+            const nuevoError = new Error("La categoría ya existe");
+            nuevoError.status_code = 409;
+            throw nuevoError;
+        }
+        throw error;
+    }
+};
+
 export const actualizarCategoriaService = async (id, categoria) => {
     const categoriaActualizada = await Categoria.findByIdAndUpdate(
         id,
@@ -43,6 +57,7 @@ export const actualizarCategoriaService = async (id, categoria) => {
 };
 
 export const eliminarCategoriaService = async (id) => {
+
     const categoria = await Categoria.findById(id);
 
     if (!categoria) {
@@ -51,14 +66,16 @@ export const eliminarCategoriaService = async (id) => {
         throw error;
     }
 
-    if (categoria.enUso) {
+    const existeVisita = await Visita.exists({
+        categoriaId: id
+    });
+
+    if (existeVisita) {
         const error = new Error(
             "La categoría no se puede eliminar, tiene visitas asociadas."
         );
 
         error.status = 409;
-        error.details = { categoria };
-
         throw error;
     }
 

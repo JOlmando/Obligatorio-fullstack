@@ -21,5 +21,16 @@ export const authenticateMiddleware = (req, res, next) => {
             req.user = decoded;
             next();
         });
-    
+};
+
+export const verificarAdmin = (req, res, next) => {
+
+    if (req.user.tipoUsuario !== "ADMIN") {
+        return res.status(403).json({
+            status_code: 403,
+            mensaje: "No tiene permisos para realizar esta acción"
+        });
+    }
+
+    next();
 };

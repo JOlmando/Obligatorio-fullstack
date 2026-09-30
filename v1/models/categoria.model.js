@@ -8,8 +8,8 @@ const categoriaSchema = new mongoose.Schema({
     },
 
     horarios: { 
-        type: String, 
-        required: true 
+        type: String,
+        required: true,
     },
     
     enUso: {
