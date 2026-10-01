@@ -68,22 +68,3 @@ export const calcularCaloriasSchema = Joi.object({
     })
 });
 
-// const validarCalcularCalorias = (req, res, next) => {
-//   const { error } = calcularCaloriasSchema.validate(req.body, {
-//     abortEarly: false,
-//     stripUnknown: true
-//   });
-
-//   if (error) {
-//     return res.status(400).json({
-//       mensaje: 'Datos inválidos',
-//       errores: error.details.map((detalle) => detalle.message)
-//     });
-//   }
-
-//   next();
-// };
-
-// module.exports = {
-//   validarCalcularCalorias
-// };

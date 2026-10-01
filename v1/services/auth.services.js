@@ -20,6 +20,7 @@ export const loginService = async (username, password) => {
         error.details = { username };
         throw error;
     }
+    
     const token = jwt.sign({ usuario: username, tipoUsuario: usuario.tipoUsuario, _id: usuario._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
     return { usuario, token };
 };
