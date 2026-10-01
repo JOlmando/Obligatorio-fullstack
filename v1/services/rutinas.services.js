@@ -62,9 +62,4 @@ export const crearRutinaService = async (rutinaData) => {
     await rutina.save();
 
     return rutina;
-<<<<<<< HEAD
 }; 
-
-=======
-}; 
->>>>>>> a850d3fab410e92ae5e525d56bd939cfbd240575
