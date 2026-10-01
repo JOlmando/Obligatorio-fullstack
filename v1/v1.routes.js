@@ -6,6 +6,7 @@ import categoriasRouter from './routes/categorias.routes.js';
 import usuarioRouter from './routes/usuario.routes.js';
 import rutinasRouter from './routes/rutinas.routes.js'; 
 import nutricionRouter from './routes/nutricion.routes.js'
+import caloriasRouter from './routes/calorias.routes.js';
 
 const router = express.Router({mergeParams: true});
 
@@ -22,6 +23,7 @@ router.use('/categorias', categoriasRouter);
 router.use('/usuarios', usuarioRouter);
 router.use('/rutinas', rutinasRouter);
 router.use('/nutricion', nutricionRouter);
+router.use('/calorias', caloriasRouter);
 
 
 
