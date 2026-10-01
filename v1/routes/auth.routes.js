@@ -6,7 +6,8 @@ import { validateBodyMiddleware } from '../middlewares/validateBody.middleware.j
 const router = express.Router({ mergeParams: true });
 
 
- router.post('/login',validateBodyMiddleware(loginSchema), ingresarUsuario);
- router.post('/register', validateBodyMiddleware(registerSchema), registrarUsuario);
+router.post('/login',validateBodyMiddleware(loginSchema), ingresarUsuario);
+router.post('/register', validateBodyMiddleware(registerSchema), registrarUsuario);
+
 
 export default router;

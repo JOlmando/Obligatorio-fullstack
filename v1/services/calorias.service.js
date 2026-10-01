@@ -113,12 +113,12 @@ export const calcularCaloriasServices = async ({
 
   } catch (error) {
     console.error(
-      'Error consumiendo FindUtils:',
+      {  status_code: 500, message: 'Error consumiendo FindUtils:' },
       error.response?.data || error.message
     );
 
     throw new Error(
-      'No fue posible obtener el cálculo nutricional'
+      {  status_code: 500, message: 'No fue posible obtener el cálculo nutricional' }
     );
   }
 };

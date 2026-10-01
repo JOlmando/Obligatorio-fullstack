@@ -6,16 +6,16 @@ export const authenticateMiddleware = (req, res, next) => {
     //En el header de las requests se espera que el token esté en el formato "Bearer <token>"
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).json({ message: 'No se proporcionó el token' });
+        return res.status(401).json({  status_code: 401, message: 'No se proporcionó el token' });
     }
     const token = authHeader.split(' ')[1];
     if (!token) {
-        return res.status(401).json({ message: 'Token inválido' });
+        return res.status(401).json({  status_code: 401, message: 'Token inválido' });
     }
     
         jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
             if (err) {
-                return res.status(401).json({ message: 'Token inválido' });
+                return res.status(401).json({  status_code: 401, message: 'Token inválido' });
             }
             // Si el token es válido, se adjunta la información del usuario a la solicitud
             req.user = decoded;

@@ -29,8 +29,7 @@ export const crearCategoriaService = async (nombre, horarios, enUso = false) => 
         return categoria;
     } catch (error) {
         if (error.code === 11000) {
-            const nuevoError = new Error("La categoría ya existe");
-            nuevoError.status_code = 409;
+            const nuevoError = new Error({  status_code: 409, message: 'La categoría ya existe' });
             throw nuevoError;
         }
         throw error;
@@ -48,7 +47,7 @@ export const actualizarCategoriaService = async (id, categoria) => {
     );
 
     if (!categoriaActualizada) {
-        const error = new Error("Categoría no encontrada");
+        const error = new Error({  status_code: 404, message: 'Categoría no encontrada' });
         error.status = 404;
         throw error;
     }
@@ -61,7 +60,7 @@ export const eliminarCategoriaService = async (id) => {
     const categoria = await Categoria.findById(id);
 
     if (!categoria) {
-        const error = new Error("Categoría no encontrada");
+        const error = new Error({  status_code: 404, message: 'Categoría no encontrada' });
         error.status = 404;
         throw error;
     }
@@ -71,10 +70,7 @@ export const eliminarCategoriaService = async (id) => {
     });
 
     if (existeVisita) {
-        const error = new Error(
-            "La categoría no se puede eliminar, tiene visitas asociadas."
-        );
-
+        const error = new Error({  status_code: 409, message: 'La categoría no se puede eliminar, tiene visitas asociadas.' });
         error.status = 409;
         throw error;
     }
@@ -101,7 +97,7 @@ export const actualizarEnUsoCategoriaService = async (categoriaId) => {
     );
 
     if (!categoria) {
-        const error = new Error("Categoría no encontrada");
+        const error = new Error({  status_code: 404, message: 'Categoría no encontrada' });
         error.status = 404;
         throw error;
     }

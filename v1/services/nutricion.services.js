@@ -10,10 +10,7 @@ export const obtenerAlimentosService = async (comida) => {
     const termino = comidas[comida];
 
     if (!termino) {
-        const error = new Error(
-            "La comida debe ser desayuno, almuerzo, merienda o cena"
-        );
-
+        const error = new Error({  status_code: 400, message: "La comida debe ser desayuno, almuerzo, merienda o cena" });
         error.status = 400;
         throw error;
     }
@@ -45,19 +42,14 @@ export const obtenerAlimentosService = async (comida) => {
         });
     } catch (error) {
 
-        const apiError = new Error(
-            "No se pudo conectar con el servicio de nutrición"
-        );
-
+        const apiError = new Error({  status_code: 503, message: 'No se pudo conectar con el servicio de nutrición' });
         apiError.status = 503;
 
         throw apiError;
     }
 
     if (!response.ok) {
-        const apiError = new Error(
-            "El servicio de nutrición no está disponible"
-        );
+        const apiError = new Error({  status_code: 503, message: 'El servicio de nutrición no está disponible' });
 
         apiError.status = 503;
 

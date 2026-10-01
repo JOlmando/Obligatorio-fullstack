@@ -9,11 +9,8 @@ export const calcularCalorias = async (req, res) => {
       datos: resultado
     });
   } catch (error) {
-    console.error('Error en calcularCalorias:', error.message);
-
-    return res.status(503).json({
-      mensaje: error.message
-    });
+   // console.error('Error en calcularCalorias:', error.message);
+    return res.status(error.status || 500).json({ status_code: error.status || 500, message: error.message });
   }
 };
 

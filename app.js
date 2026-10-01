@@ -22,12 +22,9 @@ app.use(express.json());
 //esto nos permite recibir la informacion de un formulario HTML, para ello utilizamos express.urlencoded()
 app.use(express.urlencoded({ extended: true }));
 
-
 app.use("/v1", routes);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
-
- 
 export default app;

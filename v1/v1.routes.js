@@ -25,6 +25,4 @@ router.use('/rutinas', rutinasRouter);
 router.use('/nutricion', nutricionRouter);
 router.use('/calorias', caloriasRouter);
 
-
-
- export default router;
+export default router;
