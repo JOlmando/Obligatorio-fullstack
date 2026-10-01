@@ -51,10 +51,6 @@ export const registerService = async (username, password, imageBuffer = null) =>
     }
 
     const hashedPassword = bcrypt.hashSync(password, Number(process.env.ROUND));
-<<<<<<< HEAD
-    const usuario = new Usuario({ username, password: hashedPassword, tipoUsuario: "CLIENTE", plan: "PLUS"});
-    const token = jwt.sign({ usuario: username, tipoUsuario:"CLIENTE", _id: usuario._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-=======
 
     let fotoPerfil = null;
     if (imageBuffer) {
@@ -79,7 +75,6 @@ export const registerService = async (username, password, imageBuffer = null) =>
         { expiresIn: '1h' }
     );
 
->>>>>>> a850d3fab410e92ae5e525d56bd939cfbd240575
     await usuario.save();
     return { usuario, token };
 };
