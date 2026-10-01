@@ -17,6 +17,10 @@ const usuarioSchema = new mongoose.Schema({
     
     plan: { 
         type: String
+    },
+    fotoPerfil: {
+        type: String,
+        default: null
     }
 });
 
