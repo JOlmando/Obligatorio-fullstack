@@ -2,7 +2,7 @@ import { obtenerAlimentosService } from "../services/nutricion.services.js";
 
 export const obtenerAlimentos = async (req, res) => {
 
-    const { comida } = req.query;
+    const { comida } = req.validatedQuery;
 
     const alimentos = await obtenerAlimentosService(comida);
 

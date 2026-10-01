@@ -4,6 +4,7 @@ export const comidaSchema = Joi.object({
 
     comida: Joi.string()
         .trim()
+        .lowercase()
         .valid("desayuno", "almuerzo", "merienda", "cena")
         .required()
         .messages({
