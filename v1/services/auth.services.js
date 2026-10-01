@@ -2,7 +2,7 @@ import Usuario from "../models/usuario.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { uploadBufferToCloudinary } from "../utils/cloudinary.util.js";
-import cloudinary from "../config/cloudinary.js";
+import { getCloudinary } from "../config/cloudinary.js";
 
 
 export const loginService = async (username, password) => {
@@ -52,8 +52,11 @@ export const registerService = async (username, password, imageBuffer = null) =>
 
     const hashedPassword = bcrypt.hashSync(password, Number(process.env.ROUND));
 
+
+
     let fotoPerfil = null;
     if (imageBuffer) {
+        const cloudinary = getCloudinary();
         const result = await uploadBufferToCloudinary(cloudinary, imageBuffer, {
             resource_type: "image",
             folder: "perfiles",

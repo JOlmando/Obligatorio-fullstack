@@ -19,4 +19,5 @@ router.patch("/:id", verificarAdmin, validateBodyMiddleware(crearCategoriaSchema
 router.delete("/:id", verificarAdmin, validateParamsMiddleware(categoriaIdParamSchema), eliminarCategoria);
 
 
+
 export default router;

@@ -1,6 +1,5 @@
 import express from 'express';
 import visitasRoutes from './routes/visitas.routes.js';
-import categoriasRoutes from './routes/categorias.routes.js';
 
 const router = express.Router();
 
