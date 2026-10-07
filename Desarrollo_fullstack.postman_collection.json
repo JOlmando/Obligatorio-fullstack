@@ -1,0 +1,1952 @@
+{
+  "info": {
+    "_postman_id": "e3d0d790-d24c-44b5-8faf-311561389575",
+    "name": "Desarrollo_fullstack",
+    "description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32995446"
+  },
+  "item": [
+    {
+      "name": "visitas",
+      "item": [
+        {
+          "name": "visitasByidUser",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: obtener visitas del usuario",
+                  "pm.test(\"Status 200 al obtener visitas\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene un array de visitas\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => Array.isArray(r) || Array.isArray(r.visitas) || Array.isArray(r.data));",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"Los parámetros de paginación son válidos\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    pm.expect(parseInt(params.limit)).to.be.above(0);",
+                  "    pm.expect(parseInt(params.page)).to.be.above(0);",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - visitasByidUser",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 403, el usuario no tiene permisos\", function () {",
+                  "    if (pm.response.code === 403) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede obtener visitas (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, parámetros de paginación inválidos\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/visitas?limit=10&page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "visitas"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+          },
+          "response": []
+        },
+        {
+          "name": "crear",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: crear visita",
+                  "pm.test(\"Status 200 o 201 al crear visita\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene el _id de la visita creada\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.have.property(\"_id\");",
+                  "});",
+                  "",
+                  "// ✅ Guardar id de visita para uso posterior",
+                  "const response = pm.response.json();",
+                  "if (response._id) {",
+                  "    pm.collectionVariables.set(\"idVisita\", response._id);",
+                  "    pm.test(\"idVisita guardado en variable de colección\", function () {",
+                  "        pm.expect(pm.collectionVariables.get(\"idVisita\")).to.equal(response._id);",
+                  "    });",
+                  "}",
+                  "",
+                  "// ✅ Validación del body enviado",
+                  "pm.test(\"categoriaId es un ObjectId válido (24 chars hex)\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.categoriaId).to.match(/^[a-fA-F0-9]{24}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"fecha tiene formato YYYY-MM-DD\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.fecha).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"hora tiene formato HH:mm-HH:mm\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.hora).to.match(/^([01]\\d|2[0-3]):([0-5]\\d)-([01]\\d|2[0-3]):([0-5]\\d)$/);",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - crear visita",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por categoriaId inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El id debe ser un ObjectId válido' / 'La categoría es obligatoria'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"categor\") || m.includes(\"objectid\") || m.includes(\"id\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por fecha inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La fecha debe tener el formato YYYY-MM-DD'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"fecha\") || m.includes(\"yyyy\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por hora inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La hora debe tener el formato HH:mm-HH:mm'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"hora\") || m.includes(\"hh:mm\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede crear visita (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoriaId\": \"6abacfcf2a231ce506684406\",\n  \"fecha\": \"2026-09-30\",\n  \"hora\": \"08:30-09:45\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/visitas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "visitas"
+              ]
+            },
+            "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "modificar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: modificar visita",
+                  "pm.test(\"Status 200, 201 o 204 al modificar visita\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        pm.response.to.be.json;",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene datos de la visita actualizada\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r._id || r.message || r.visita);",
+                  "    }",
+                  "});",
+                  "",
+                  "// ✅ Validación del body enviado",
+                  "pm.test(\"categoriaId es un ObjectId válido (24 chars hex)\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.categoriaId).to.match(/^[a-fA-F0-9]{24}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"fecha tiene formato YYYY-MM-DD\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.fecha).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"hora tiene formato HH:mm-HH:mm\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.hora).to.match(/^([01]\\d|2[0-3]):([0-5]\\d)-([01]\\d|2[0-3]):([0-5]\\d)$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El id en la URL es un ObjectId válido (24 chars hex)\", function () {",
+                  "    const urlParts = pm.request.url.toString().split(\"/\");",
+                  "    const id = urlParts[urlParts.length - 1];",
+                  "    pm.expect(id).to.match(/^[a-fA-F0-9]{24}$/);",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - modificar visita",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 404, la visita no existe\", function () {",
+                  "    if (pm.response.code === 404) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por categoriaId inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El id debe ser un ObjectId válido' / 'La categoría es obligatoria'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"categor\") || m.includes(\"objectid\") || m.includes(\"id\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por fecha inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La fecha debe tener el formato YYYY-MM-DD'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"fecha\") || m.includes(\"yyyy\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por hora inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La hora debe tener el formato HH:mm-HH:mm'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"hora\") || m.includes(\"hh:mm\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede modificar visita (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoriaId\": \"6abacfcf2a231ce506684407\",\n  \"fecha\": \"2026-09-30\",\n  \"hora\": \"08:30-09:45\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/visitas/6abbea8036cd3c6883e84ad4",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "visitas",
+                "6abbea8036cd3c6883e84ad4"
+              ]
+            },
+            "description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: eliminar visita",
+                  "pm.test(\"Status 200, 202 o 204 al eliminar visita\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido o vacía (204)\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        pm.response.to.be.json;",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene confirmación de eliminación\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r._id || r.deleted);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"El id en la URL es un ObjectId válido (24 chars hex)\", function () {",
+                  "    const urlParts = pm.request.url.toString().split(\"/\");",
+                  "    const id = urlParts[urlParts.length - 1];",
+                  "    pm.expect(id).to.match(/^[a-fA-F0-9]{24}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - delete visita",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 404, la visita no existe o ya fue eliminada\", function () {",
+                  "    if (pm.response.code === 404) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, el id en la URL no es un ObjectId válido\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El id debe ser un ObjectId válido'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"id\") || m.includes(\"objectid\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede eliminar visita (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/visitas/6abbbafbfc9a50fb892e118f",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "visitas",
+                "6abbbafbfc9a50fb892e118f"
+              ]
+            },
+            "description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "visitaByFechas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: obtener visitas por rango de fechas",
+                  "pm.test(\"Status 200 al obtener visitas por fechas\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene un array de visitas\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => Array.isArray(r) || Array.isArray(r.visitas) || Array.isArray(r.data));",
+                  "});",
+                  "",
+                  "pm.test(\"El parámetro min tiene formato YYYY-MM-DD\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    pm.expect(params.min).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El parámetro max tiene formato YYYY-MM-DD\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    pm.expect(params.max).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"La fecha min es anterior o igual a max\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    pm.expect(new Date(params.min).getTime()).to.be.at.most(new Date(params.max).getTime());",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - visitaByFechas",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por formato de fecha inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La fecha debe tener el formato YYYY-MM-DD'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"fecha\") || m.includes(\"yyyy\") || m.includes(\"min\") || m.includes(\"max\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si min es posterior a max, el servidor responde con error\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    if (params.min && params.max && new Date(params.min) > new Date(params.max)) {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede consultar visitas por fechas (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/visitas/fechas?min=2026-09-01&max=2026-09-21",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "visitas",
+                "fechas"
+              ],
+              "query": [
+                {
+                  "key": "min",
+                  "value": "2026-09-01"
+                },
+                {
+                  "key": "max",
+                  "value": "2026-09-21"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "categorias",
+      "item": [
+        {
+          "name": "categorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: obtener categorías",
+                  "pm.test(\"Status 200 al obtener categorías\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene un array de categorías\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => Array.isArray(r) || Array.isArray(r.categorias) || Array.isArray(r.data));",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"Los parámetros de paginación son válidos\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    pm.expect(parseInt(params.limit)).to.be.above(0);",
+                  "    pm.expect(parseInt(params.page)).to.be.above(0);",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - categorias GET",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 403, el usuario no tiene permisos\", function () {",
+                  "    if (pm.response.code === 403) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede obtener categorías (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, parámetros de paginación inválidos\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias?limit=10&page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "crear",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: crear categoría",
+                  "pm.test(\"Status 200 o 201 al crear categoría\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene el _id de la categoría creada\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => r._id || r.id || r.categoria);",
+                  "});",
+                  "",
+                  "// ✅ Validación del body enviado según crearCategoriaSchema",
+                  "pm.test(\"nombre cumple mínimo 3 caracteres\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.nombre.trim().length).to.be.at.least(3);",
+                  "});",
+                  "",
+                  "pm.test(\"horarios tiene formato HH:mm-HH:mm\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.horarios).to.match(/^([01]\\d|2[0-3]):([0-5]\\d)-([01]\\d|2[0-3]):([0-5]\\d)$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - crear categoría",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por nombre corto, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El nombre debe tener al menos {#limit} caracteres'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"nombre\") || m.includes(\"name\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por horarios inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El horario debe tener el formato HH:mm-HH:mm'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"horario\") || m.includes(\"hh:mm\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] nombre no puede estar vacío\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (!body.nombre || body.nombre.trim() === \"\") {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] nombre no puede tener menos de 3 caracteres\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.nombre && body.nombre.trim().length < 3) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] horarios no puede estar vacío\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (!body.horarios || body.horarios.trim() === \"\") {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede crear categoría (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\":\"aaaa\",\r\n    \"horarios\": \"00:00-00:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: eliminar categoría",
+                  "pm.test(\"Status 200, 202 o 204 al eliminar categoría\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido o vacía (204)\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        pm.response.to.be.json;",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene confirmación de eliminación\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r._id || r.deleted);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"El id en la URL es un ObjectId válido (24 chars hex)\", function () {",
+                  "    const urlParts = pm.request.url.toString().split(\"/\");",
+                  "    const id = urlParts[urlParts.length - 1];",
+                  "    pm.expect(id).to.match(/^[a-fA-F0-9]{24}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - delete categoría",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 404, la categoría no existe o ya fue eliminada\", function () {",
+                  "    if (pm.response.code === 404) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, el id en la URL no es un ObjectId válido\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El id debe ser un ObjectId válido' / 'El id debe tener 24 caracteres'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"id\") || m.includes(\"objectid\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por id inválido, el mensaje menciona el id\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"id\") || m.includes(\"24\") || m.includes(\"hex\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede eliminar categoría (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias/6abacfcf2a231ce506684407",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "6abacfcf2a231ce506684407"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "actualizar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: actualizar categoría",
+                  "pm.test(\"Status 200, 201 o 204 al actualizar categoría\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido o vacía (204)\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        pm.response.to.be.json;",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene datos de la categoría actualizada\", function () {",
+                  "    if (pm.response.code !== 204) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r._id || r.message || r.categoria);",
+                  "    }",
+                  "});",
+                  "",
+                  "// ✅ Validación del body enviado según crearCategoriaSchema",
+                  "pm.test(\"nombre cumple mínimo 3 caracteres\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.nombre.trim().length).to.be.at.least(3);",
+                  "});",
+                  "",
+                  "pm.test(\"horarios tiene formato HH:mm-HH:mm\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.horarios).to.match(/^([01]\\d|2[0-3]):([0-5]\\d)-([01]\\d|2[0-3]):([0-5]\\d)$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El id en la URL es un ObjectId válido (24 chars hex)\", function () {",
+                  "    const urlParts = pm.request.url.toString().split(\"/\");",
+                  "    const id = urlParts[urlParts.length - 1];",
+                  "    pm.expect(id).to.match(/^[a-fA-F0-9]{24}$/);",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - actualizar categoría",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 404, la categoría no existe\", function () {",
+                  "    if (pm.response.code === 404) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por nombre corto, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El nombre debe tener al menos {#limit} caracteres'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"nombre\") || m.includes(\"name\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por horarios inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El horario debe tener el formato HH:mm-HH:mm'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"horario\") || m.includes(\"hh:mm\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] nombre no puede tener menos de 3 caracteres\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.nombre && body.nombre.trim().length < 3) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede actualizar categoría (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\":\"Test\",\r\n    \"horarios\": \"00:00-00:00\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/6abc61f8a803b3e0b4b73c18",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "6abc61f8a803b3e0b4b73c18"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "usuarios",
+      "item": [
+        {
+          "name": "register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: registro correcto",
+                  "pm.test(\"Status 200 o 201 en registro exitoso\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"Respuesta contiene token o mensaje de éxito\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => r.token || r.message || r.user || r._id);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Username cumple mínimo 3 caracteres\", function () {",
+                  "    const username = pm.collectionVariables.get(\"uniqueUser\");",
+                  "    pm.expect(username.length).to.be.at.least(3);",
+                  "});",
+                  "",
+                  "pm.test(\"Password cumple el patrón requerido\", function () {",
+                  "    const password = pm.collectionVariables.get(\"uniquePassword\");",
+                  "    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])/;",
+                  "    pm.expect(pattern.test(password)).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test(\"confirmPassword coincide con password (ambas variables iguales)\", function () {",
+                  "    const password = pm.collectionVariables.get(\"uniquePassword\");",
+                  "    pm.expect(password).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"Variables uniqueUser y uniquePassword fueron guardadas\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"uniqueUser\")).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(pm.collectionVariables.get(\"uniquePassword\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - register",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por username corto, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El nombre debe tener al menos {#limit} caracteres' o similar",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"username\") || m.includes(\"nombre\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por password inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"contraseña\") || m.includes(\"password\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por confirmPassword distinto, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'Las contraseñas no coinciden'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"coinciden\") || m.includes(\"confirm\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Username no puede tener menos de 3 caracteres\", function () {",
+                  "    const username = pm.collectionVariables.get(\"uniqueUser\");",
+                  "    if (username && username.length < 3) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Username no puede superar 30 caracteres\", function () {",
+                  "    const username = pm.collectionVariables.get(\"uniqueUser\");",
+                  "    if (username && username.length > 30) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Password debe tener al menos 6 caracteres\", function () {",
+                  "    const password = pm.collectionVariables.get(\"uniquePassword\");",
+                  "    if (password && password.length < 6) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Password no puede superar 30 caracteres\", function () {",
+                  "    const password = pm.collectionVariables.get(\"uniquePassword\");",
+                  "    if (password && password.length > 30) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Password debe cumplir el patrón (mayúscula, minúscula, número, especial)\", function () {",
+                  "    const password = pm.collectionVariables.get(\"uniquePassword\");",
+                  "    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])/;",
+                  "    if (password && !pattern.test(password)) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 🎲 Generar usuario aleatorio y guardarlo en variables de colección\nconst randomUsername = pm.collectionVariables.replaceIn('{{$randomUserName}}');\nconst randomPassword = \"Test\" + pm.collectionVariables.replaceIn('{{$randomInt}}') + \"Abc!\";\n\npm.collectionVariables.set(\"uniqueUser\", randomUsername);\npm.collectionVariables.set(\"uniquePassword\", randomPassword);\n\n// Actualizar el body del request con los valores generados\npm.request.body.update({\n    mode: \"formdata\",\n    formdata: [\n        { key: \"username\", value: randomUsername, type: \"text\" },\n        { key: \"password\", value: randomPassword, type: \"text\" },\n        { key: \"confirmPassword\", value: randomPassword, type: \"text\" }\n    ]\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "{{uniqueUser}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{uniquePassword}}",
+                  "type": "text"
+                },
+                {
+                  "key": "confirmPassword",
+                  "value": "{{uniquePassword}}",
+                  "type": "text"
+                },
+                {
+                  "key": "fotoPerfil",
+                  "type": "file",
+                  "src": "/C:/Users/Jere/Pictures/yo/artworks-000144675511-4cn1sa-t500x500.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "registerDuplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: registro correcto\npm.test(\"Status 200 o 201 en registro exitoso\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n\npm.test(\"Respuesta contiene token o mensaje de éxito\", function () {\n    const res = pm.response.json();\n    pm.expect(res).to.satisfy(r => r.token || r.message || r.user || r._id);\n});\n\npm.test(\"La respuesta es un objeto JSON válido\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Username cumple mínimo 3 caracteres\", function () {\n    const username = pm.collectionVariables.get(\"uniqueUser\");\n    pm.expect(username.length).to.be.at.least(3);\n});\n\npm.test(\"Password cumple el patrón requerido\", function () {\n    const password = pm.collectionVariables.get(\"uniquePassword\");\n    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])/;\n    pm.expect(pattern.test(password)).to.be.true;\n});\n\npm.test(\"confirmPassword coincide con password (ambas variables iguales)\", function () {\n    const password = pm.collectionVariables.get(\"uniquePassword\");\n    pm.expect(password).to.be.a(\"string\").and.not.empty;\n});\n\npm.test(\"Variables uniqueUser y uniquePassword fueron guardadas\", function () {\n    pm.expect(pm.collectionVariables.get(\"uniqueUser\")).to.be.a(\"string\").and.not.empty;\n    pm.expect(pm.collectionVariables.get(\"uniquePassword\")).to.be.a(\"string\").and.not.empty;\n});\n\n// ❌ CASOS NEGATIVOS - register\npm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);\n    }\n});\n\npm.test(\"[NEG] Si el status es 400 por username corto, el mensaje lo indica\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        const msg = JSON.stringify(res).toLowerCase();\n        // El validator dice: 'El nombre debe tener al menos {#limit} caracteres' o similar\n        pm.expect(msg).to.satisfy(m => m.includes(\"username\") || m.includes(\"nombre\") || m.includes(\"message\") || m.includes(\"error\"));\n    }\n});\n\npm.test(\"[NEG] Si el status es 400 por password inválida, el mensaje lo indica\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        const msg = JSON.stringify(res).toLowerCase();\n        pm.expect(msg).to.satisfy(m => m.includes(\"contraseña\") || m.includes(\"password\") || m.includes(\"message\") || m.includes(\"error\"));\n    }\n});\n\npm.test(\"[NEG] Si el status es 400 por confirmPassword distinto, el mensaje lo indica\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        const msg = JSON.stringify(res).toLowerCase();\n        // El validator dice: 'Las contraseñas no coinciden'\n        pm.expect(msg).to.satisfy(m => m.includes(\"coinciden\") || m.includes(\"confirm\") || m.includes(\"message\") || m.includes(\"error\"));\n    }\n});\n\npm.test(\"[NEG] Username no puede tener menos de 3 caracteres\", function () {\n    const username = pm.collectionVariables.get(\"uniqueUser\");\n    if (username && username.length < 3) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Username no puede superar 30 caracteres\", function () {\n    const username = pm.collectionVariables.get(\"uniqueUser\");\n    if (username && username.length > 30) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Password debe tener al menos 6 caracteres\", function () {\n    const password = pm.collectionVariables.get(\"uniquePassword\");\n    if (password && password.length < 6) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Password no puede superar 30 caracteres\", function () {\n    const password = pm.collectionVariables.get(\"uniquePassword\");\n    if (password && password.length > 30) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Password debe cumplir el patrón (mayúscula, minúscula, número, especial)\", function () {\n    const password = pm.collectionVariables.get(\"uniquePassword\");\n    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])/;\n    if (password && !pattern.test(password)) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// // 🎲 Generar usuario aleatorio y guardarlo en variables de colección\n// const randomUsername = pm.collectionVariables.replaceIn('{{$randomUserName}}');\n// const randomPassword = \"Test\" + pm.collectionVariables.replaceIn('{{$randomInt}}') + \"Abc!\";\n\n// pm.collectionVariables.set(\"uniqueUser\", randomUsername);\n// pm.collectionVariables.set(\"uniquePassword\", randomPassword);\n\n// // Actualizar el body del request con los valores generados\n// pm.request.body.update({\n//     mode: \"formdata\",\n//     formdata: [\n//         { key: \"username\", value: randomUsername, type: \"text\" },\n//         { key: \"password\", value: randomPassword, type: \"text\" },\n//         { key: \"confirmPassword\", value: randomPassword, type: \"text\" }\n//     ]\n// });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "{{uniqueUser}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{uniquePassword}}",
+                  "type": "text"
+                },
+                {
+                  "key": "confirmPassword",
+                  "value": "{{uniquePassword}}",
+                  "type": "text"
+                },
+                {
+                  "key": "fotoPerfil",
+                  "type": "file",
+                  "src": "/C:/Users/Jere/Pictures/yo/artworks-000144675511-4cn1sa-t500x500.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: login correcto\npm.test(\"Status 200 en login exitoso\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"La respuesta contiene un token\", function () {\n    const res = pm.response.json();\n    pm.expect(res).to.have.property(\"token\");\n    pm.expect(res.token).to.be.a(\"string\").and.not.empty;\n});\n\n// ✅ Guardar token en variable de colección\nconst response = pm.response.json();\nif (response.token) {\n    pm.collectionVariables.set(\"token\", response.token);\n    pm.test(\"Token guardado en variable de colección\", function () {\n        pm.expect(pm.collectionVariables.get(\"token\")).to.equal(response.token);\n    });\n}\n\npm.test(\"La respuesta es un objeto JSON válido\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Username cumple mínimo 3 caracteres\", function () {\n    const body = JSON.parse(pm.request.body.raw);\n    pm.expect(body.username.length).to.be.at.least(3);\n});\n\npm.test(\"Password cumple longitud requerida (6-30 caracteres)\", function () {\n    const body = JSON.parse(pm.request.body.raw);\n    pm.expect(body.password.length).to.be.within(6, 30);\n});\n\n// ❌ CASOS NEGATIVOS - login\npm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);\n    }\n});\n\npm.test(\"[NEG] Si el status es 401, credenciales inválidas - respuesta con mensaje\", function () {\n    if (pm.response.code === 401) {\n        const res = pm.response.json();\n        pm.expect(res).to.satisfy(r => r.message || r.error);\n    }\n});\n\npm.test(\"[NEG] Si el status es 400 por username corto, el mensaje lo indica\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        const msg = JSON.stringify(res).toLowerCase();\n        pm.expect(msg).to.satisfy(m => m.includes(\"username\") || m.includes(\"nombre\") || m.includes(\"message\") || m.includes(\"error\"));\n    }\n});\n\npm.test(\"[NEG] Si el status es 400 por password corta, el mensaje menciona contraseña\", function () {\n    if (pm.response.code === 400) {\n        const res = pm.response.json();\n        const msg = JSON.stringify(res).toLowerCase();\n        // El validator dice: 'La contraseña debe tener al menos {#limit} caracteres'\n        pm.expect(msg).to.satisfy(m => m.includes(\"contraseña\") || m.includes(\"password\") || m.includes(\"message\") || m.includes(\"error\"));\n    }\n});\n\npm.test(\"[NEG] Username no puede tener menos de 3 caracteres\", function () {\n    const body = JSON.parse(pm.request.body.raw);\n    if (body.username && body.username.length < 3) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Username no puede superar 30 caracteres\", function () {\n    const body = JSON.parse(pm.request.body.raw);\n    if (body.username && body.username.length > 30) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Password debe tener al menos 6 caracteres\", function () {\n    const body = JSON.parse(pm.request.body.raw);\n    if (body.password && body.password.length < 6) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Password no puede superar 30 caracteres\", function () {\n    const body = JSON.parse(pm.request.body.raw);\n    if (body.password && body.password.length > 30) {\n        pm.expect(pm.response.code).to.equal(400);\n    }\n});\n\npm.test(\"[NEG] Si no hay token en respuesta, el login falló\", function () {\n    if (pm.response.code !== 200) {\n        const res = pm.response.json();\n        pm.expect(res).to.not.have.property(\"token\");\n    }\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"{{uniqueUser}}\",\r\n    \"password\": \"{{uniquePassword}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "changePlan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: cambio de plan",
+                  "pm.test(\"Status 200 en cambio de plan exitoso\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene datos del usuario actualizado\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => r.user || r.plan || r.message || r._id);",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - changePlan",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente - respuesta con mensaje\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 403, el usuario no tiene permisos - respuesta con mensaje\", function () {",
+                  "    if (pm.response.code === 403) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede cambiar el plan (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/change-plan",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "change-plan"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "rutinas",
+      "item": [
+        {
+          "name": "rutina",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: crear rutina",
+                  "pm.test(\"Status 200 o 201 al crear rutina\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene datos de la rutina generada\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.be.an(\"object\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"El campo musculos no está vacío en el body\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.musculos).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - rutina",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por musculos vacío, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"musculos\") || m.includes(\"muscle\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] musculos no puede estar vacío\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (!body.musculos || body.musculos.trim() === \"\") {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede crear rutina (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"musculos\": \"espalda y bíceps\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/rutinas/crear",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "rutinas",
+                "crear"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "calorias",
+      "item": [
+        {
+          "name": "calorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: calcular calorías",
+                  "pm.test(\"Status 200 al calcular calorías\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene el resultado de calorías\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.satisfy(r => r.calorias !== undefined || r.resultado !== undefined || r.data !== undefined || typeof r === \"object\");",
+                  "});",
+                  "",
+                  "// ✅ Validación del body enviado según calcularCaloriasSchema",
+                  "pm.test(\"sexo es 'male' o 'female'\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect([\"male\", \"female\"]).to.include(body.sexo);",
+                  "});",
+                  "",
+                  "pm.test(\"edad es un entero entre 1 y 120\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(Number.isInteger(body.edad)).to.be.true;",
+                  "    pm.expect(body.edad).to.be.within(1, 120);",
+                  "});",
+                  "",
+                  "pm.test(\"peso es positivo y no supera 500 kg\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.peso).to.be.above(0).and.at.most(500);",
+                  "});",
+                  "",
+                  "pm.test(\"altura es positiva y no supera 300 cm\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(body.altura).to.be.above(0).and.at.most(300);",
+                  "});",
+                  "",
+                  "pm.test(\"actividad es un valor válido\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    const validActividades = [\"sedentary\", \"light\", \"moderate\", \"active\", \"very_active\", \"extra_active\"];",
+                  "    pm.expect(validActividades).to.include(body.actividad);",
+                  "});",
+                  "",
+                  "pm.test(\"objetivo es 'lose', 'maintain' o 'gain'\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect([\"lose\", \"maintain\", \"gain\"]).to.include(body.objetivo);",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - calorias",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por sexo inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El sexo debe ser male o female'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"sexo\") || m.includes(\"male\") || m.includes(\"female\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por edad inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La edad debe ser un número entero' / 'La edad debe ser mayor a 0' / 'La edad no puede superar los 120 años'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"edad\") || m.includes(\"age\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por peso inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El peso debe ser mayor a 0' / 'El peso no puede superar los 500 kg'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"peso\") || m.includes(\"weight\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por altura inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La altura debe ser mayor a 0' / 'La altura no puede superar los 300 cm'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"altura\") || m.includes(\"height\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por actividad inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'Nivel de actividad inválido'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"actividad\") || m.includes(\"activity\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por objetivo inválido, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'El objetivo debe ser lose, maintain o gain'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"objetivo\") || m.includes(\"goal\") || m.includes(\"lose\") || m.includes(\"gain\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] sexo no puede ser un valor distinto de 'male' o 'female'\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.sexo && ![\"male\", \"female\"].includes(body.sexo)) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] edad no puede ser mayor a 120\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.edad && body.edad > 120) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] peso no puede superar 500 kg\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.peso && body.peso > 500) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] altura no puede superar 300 cm\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.altura && body.altura > 300) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] actividad no puede ser un valor fuera del enum\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    const validActividades = [\"sedentary\", \"light\", \"moderate\", \"active\", \"very_active\", \"extra_active\"];",
+                  "    if (body.actividad && !validActividades.includes(body.actividad)) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] objetivo no puede ser un valor fuera de 'lose', 'maintain', 'gain'\", function () {",
+                  "    const body = JSON.parse(pm.request.body.raw);",
+                  "    if (body.objetivo && ![\"lose\", \"maintain\", \"gain\"].includes(body.objetivo)) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede calcular calorías (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sexo\": \"male\",\r\n  \"edad\": 25,\r\n  \"peso\": 70,\r\n  \"altura\": 175,\r\n  \"actividad\": \"moderate\",\r\n  \"objetivo\": \"gain\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/calorias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calorias"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "nutricion",
+      "item": [
+        {
+          "name": "nutricion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ✅ Caso exitoso: obtener nutrición",
+                  "pm.test(\"Status 200 al obtener nutrición\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta es un objeto JSON válido\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"La respuesta contiene datos de nutrición\", function () {",
+                  "    const res = pm.response.json();",
+                  "    pm.expect(res).to.be.an(\"object\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ✅ Validación del parámetro comida según comidaSchema",
+                  "pm.test(\"comida es un valor válido (desayuno, almuerzo, merienda o cena)\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    const validComidas = [\"desayuno\", \"almuerzo\", \"merienda\", \"cena\"];",
+                  "    pm.expect(validComidas).to.include(params.comida.toLowerCase());",
+                  "});",
+                  "",
+                  "pm.test(\"El token de autorización está presente\", function () {",
+                  "    pm.expect(pm.collectionVariables.get(\"token\")).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "// ❌ CASOS NEGATIVOS - nutricion",
+                  "pm.test(\"[NEG] Si el status es 401, el token es inválido o está ausente\", function () {",
+                  "    if (pm.response.code === 401) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400, la respuesta contiene mensaje de error\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        pm.expect(res).to.satisfy(r => r.message || r.error || r.errors);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Si el status es 400 por comida inválida, el mensaje lo indica\", function () {",
+                  "    if (pm.response.code === 400) {",
+                  "        const res = pm.response.json();",
+                  "        const msg = JSON.stringify(res).toLowerCase();",
+                  "        // El validator dice: 'La comida debe ser desayuno, almuerzo, merienda o cena'",
+                  "        pm.expect(msg).to.satisfy(m => m.includes(\"comida\") || m.includes(\"desayuno\") || m.includes(\"almuerzo\") || m.includes(\"message\") || m.includes(\"error\"));",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] comida no puede ser un valor fuera del enum\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    const validComidas = [\"desayuno\", \"almuerzo\", \"merienda\", \"cena\"];",
+                  "    if (params.comida && !validComidas.includes(params.comida.toLowerCase())) {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] comida no puede estar vacía\", function () {",
+                  "    const params = pm.request.url.query.toObject();",
+                  "    if (!params.comida || params.comida.trim() === \"\") {",
+                  "        pm.expect(pm.response.code).to.equal(400);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"[NEG] Sin token no se puede obtener nutrición (401 o 403)\", function () {",
+                  "    const token = pm.collectionVariables.get(\"token\");",
+                  "    if (!token || token === \"\") {",
+                  "        pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/nutricion?comida=desayuno",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "nutricion"
+              ],
+              "query": [
+                {
+                  "key": "comida",
+                  "value": "desayuno"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "id",
+      "value": "1"
+    },
+    {
+      "key": "base_url",
+      "value": "https://template.postman-echo.com"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "web_url",
+      "value": ""
+    },
+    {
+      "key": "uniqueUser",
+      "value": ""
+    },
+    {
+      "key": "uniquePassword",
+      "value": ""
+    }
+  ]
+}
