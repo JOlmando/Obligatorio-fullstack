@@ -309,7 +309,7 @@ La API utiliza versionado:
 ```text
 POST   /api/v1/visitas
 GET    /api/v1/visitas
-GET    /api/v1/visitas/:id
+GET    /api/v1/visitas/fechas
 PUT    /api/v1/visitas/:id
 DELETE /api/v1/visitas/:id
 ```
@@ -330,7 +330,7 @@ Las operaciones de creación, modificación y eliminación están restringidas a
 ## Rutinas
 
 ```text
-POST   /api/v1/rutinas
+POST   /api/v1/rutinas/crear
 ```
 
 Genera una rutina utilizando inteligencia artificial y la asocia al usuario autenticado.
@@ -344,11 +344,13 @@ GET    /api/v1/nutricion?comida=merienda
 GET    /api/v1/nutricion?comida=cena
 ```
 
-## Cálculo nutricional
+## Cálculo calorico
 
 Endpoint destinado al cálculo del gasto energético y calorías objetivo mediante un servicio externo.
 
----
+```text
+POST    /api/v1/calorias
+```
 
 # Autenticación y autorización
 
@@ -451,6 +453,8 @@ La aplicación sigue una separación por responsabilidades:
 ```text
 v1/
 ├── controllers/
+├── config/
+├── utils/
 ├── services/
 ├── models/
 ├── routes/
