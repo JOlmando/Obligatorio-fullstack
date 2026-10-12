@@ -18,7 +18,7 @@ export const crearCategoriaSchema = Joi.object({
     horarios: Joi.string()
         .trim()
         .required()
-        .pattern(/^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/)
+        .pattern(/^(([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d))(;([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d))*$/)
         .messages({
             'string.empty': 'El horario no puede estar vacío',
             'string.pattern.base': 'El horario debe tener el formato HH:mm-HH:mm',

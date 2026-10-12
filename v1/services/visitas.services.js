@@ -23,7 +23,6 @@ export const obtenerVisitasService = async (limit, page, usuarioId) => {
     return { visitas, limit, page, totalPages };
 };
 
-// Generar logica del alta de visita controlando el maximo de 4 por semana siempre que sea usuario plus
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const verificarLimiteSemanal = async (
     usuarioId,
@@ -47,9 +46,7 @@ export const verificarLimiteSemanal = async (
 
     const diaSemana = fechaVisita.getDay();
 
-    const diasDesdeLunes = diaSemana === 0
-        ? 6
-        : diaSemana - 1;
+    const diasDesdeLunes = diaSemana === 0 ? 6 : diaSemana - 1;
 
     const inicioSemana = new Date(fechaVisita);
 
