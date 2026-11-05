@@ -3,9 +3,13 @@ import { upload } from "../middlewares/multer.middleware.js";
 import { runMulterSingle } from "../utils/multer.util.js";
 
 export const ingresarUsuario = async (req, res) => {
-  const {username, password} = req.body;
-  const { usuario, token } = await loginService(username, password);
-  res.json({ message: 'Iniciando sesión', usuario: { username }, token });
+    try {
+        const {username, password} = req.body;
+        const { usuario, token } = await loginService(username, password);
+        res.status(201).json({ message: 'Iniciando sesión', usuario: { username }, token });
+    } catch (error) {
+        res.status(error.status || 500).json({ status_code: error.status || 500, message: error.message });
+    }
 };
 
 // export const registrarUsuario =  async (req, res) => {
@@ -22,7 +26,7 @@ export const registrarUsuario = async (req, res) => {
         const imageBuffer = req.file ? req.file.buffer : null;
 
         const result = await registerService(username, password, imageBuffer);
-        res.status(201).json(result);
+        res.status(201).json({ message: 'Registrando usuario', usuario: { username,  }, token });
     } catch (error) {
         res.status(error.status || 500).json({ status_code: error.status || 500, message: error.message });
     }
