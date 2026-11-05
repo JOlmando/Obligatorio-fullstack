@@ -12,6 +12,7 @@ Thumbs.db
 
 # Variables de entorno
 .env
+.envOLD
 
 # Cobertura de tests
 coverage/
