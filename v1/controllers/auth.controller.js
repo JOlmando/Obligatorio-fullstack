@@ -20,7 +20,7 @@ export const ingresarUsuario = async (req, res) => {
 
 export const registrarUsuario = async (req, res) => {
     try {
-        await runMulterSingle(upload, "fotoPerfil", req, res);
+        await runMulterSingle(upload, "imagen", req, res);
 
         const { username, password } = req.body;
         const imageBuffer = req.file ? req.file.buffer : null;

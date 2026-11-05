@@ -40,6 +40,7 @@ export const registerService = async (username, password, imagen = null) => {
     const hashedPassword = bcrypt.hashSync(password, Number(process.env.ROUND));
 
     let fotoPerfil = null;
+    
     if (imagen) {
         const cloudinary = getCloudinary();
         const result = await uploadBufferToCloudinary(cloudinary, imagen, {
