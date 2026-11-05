@@ -27,5 +27,6 @@ export const registerSchema = Joi.object({
     .messages({
       'any.only': 'Las contraseñas no coinciden',
       'any.required': 'La confirmación de la contraseña es obligatoria'
-    })
+    }),
+  imagen: Joi.any().optional()
 });
