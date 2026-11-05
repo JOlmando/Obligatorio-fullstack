@@ -27,7 +27,7 @@ export const loginService = async (username, password) => {
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const registerService = async (username, password, imageBuffer = null) => {
+export const registerService = async (username, password, imagen = null) => {
     const usuarioExistente = await Usuario.findOne({ username });
     if (usuarioExistente) {
         const error = new Error("El usuario ya existe");
@@ -40,9 +40,9 @@ export const registerService = async (username, password, imageBuffer = null) =>
     const hashedPassword = bcrypt.hashSync(password, Number(process.env.ROUND));
 
     let fotoPerfil = null;
-    if (imageBuffer) {
+    if (imagen) {
         const cloudinary = getCloudinary();
-        const result = await uploadBufferToCloudinary(cloudinary, imageBuffer, {
+        const result = await uploadBufferToCloudinary(cloudinary, imagen, {
             resource_type: "image",
             folder: "perfiles",
         });

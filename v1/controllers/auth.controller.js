@@ -26,7 +26,7 @@ export const registrarUsuario = async (req, res) => {
         const imageBuffer = req.file ? req.file.buffer : null;
 
         const result = await registerService(username, password, imageBuffer);
-        res.status(201).json({ message: 'Registrando usuario', usuario: { username,  }, token });
+        res.status(201).json({ message: 'Registrando usuario', usuario: { username }, token: result.token });
     } catch (error) {
         res.status(error.status || 500).json({ status_code: error.status || 500, message: error.message });
     }
