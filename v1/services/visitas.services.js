@@ -5,8 +5,8 @@ import mongoose from "mongoose";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const obtenerVisitasService = async (limit, page, usuarioId) => {
-    limit = Number(limit) || 3;
-    page = Number(page) || 1;
+    limit = Number(limit);
+    page = Number(page);
     const skip = (page - 1) * limit;
 
     const usuarioObjectId = new mongoose.Types.ObjectId(usuarioId);

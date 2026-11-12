@@ -65,5 +65,5 @@ export const registerService = async (username, password, imagen = null) => {
     );
 
     await usuario.save();
-    return { usuario, fotoPerfil, token };
+    return { usuario, token };
 };
