@@ -7,12 +7,12 @@ import {
 
 import {actualizarEnUsoCategoriaService} from "../services/categorias.services.js"
 
-export const obtenerVisitas = async (req, res) => {
-    // const { limit, page } = req.query;
-    // const usuarioId = req.decoded._id;
-    // const resultado = await obtenerVisitasService(limit, page, usuarioId);
-    // res.json(resultado);
-}
+// export const obtenerVisitas = async (req, res) => {
+//     // const { limit, page } = req.query;
+//     // const usuarioId = req.decoded._id;
+//     // const resultado = await obtenerVisitasService(limit, page, usuarioId);
+//     // res.json(resultado);
+// }
 
 // Generar logica de visitas
 export const crearVisita = async (req, res) => {
@@ -77,7 +77,8 @@ export const eliminarVisita = async (req, res) => {
 
 export const obtenerVisitasFechas = async (req, res) => {
     const { min, max } = req.query;
-    const visitas = await obtenerVisitasFechasService(min, max);
+    const usuarioId = req.user._id;
+    const visitas = await obtenerVisitasFechasService(usuarioId, min, max);
     res.json(visitas);
 }
 

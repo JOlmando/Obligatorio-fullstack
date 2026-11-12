@@ -429,9 +429,10 @@ export const eliminarVisitaService = async (
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const obtenerVisitasFechasService = async (min, max) => {
+export const obtenerVisitasFechasService = async (id, min, max) => {
 
     const visitas = await Visita.find({
+        usuarioId: id,
         fecha: {
             $gte: min,
             $lte: max
