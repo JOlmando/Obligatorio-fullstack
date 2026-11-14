@@ -7,12 +7,6 @@ import {
 
 import {actualizarEnUsoCategoriaService} from "../services/categorias.services.js"
 
-// export const obtenerVisitas = async (req, res) => {
-//     // const { limit, page } = req.query;
-//     // const usuarioId = req.decoded._id;
-//     // const resultado = await obtenerVisitasService(limit, page, usuarioId);
-//     // res.json(resultado);
-// }
 
 // Generar logica de visitas
 export const crearVisita = async (req, res) => {
@@ -37,11 +31,8 @@ export const obtenerVisitaByIdUser = async (req, res) => {
 }
 
 export const actualizarVisita = async (req, res) => {
-
     const { categoriaId, fecha, hora } = req.body;
-
     const usuarioId = req.user._id;
-
     const visita = await actualizarVisitaService(
         req.params.id,
         usuarioId,
@@ -51,24 +42,18 @@ export const actualizarVisita = async (req, res) => {
             hora
         }
     );
-
     await actualizarEnUsoCategoriaService(categoriaId);
     res.status(200).json(visita);
 };
 
 export const eliminarVisita = async (req, res) => {
-
     const usuarioId = req.user._id;
-
     const visita = await eliminarVisitaService(
         req.params.id,
         usuarioId
     );
-
     const categoriaId = visita.categoriaId;
-
     await actualizarEnUsoCategoriaService(categoriaId);
-
     res.status(200).json({
         mensaje: "Visita eliminada correctamente",
         visita

@@ -14,7 +14,6 @@ export const obtenerCategorias = async (req, res) => {
 
 export const crearCategoria = async (req, res) => {
     const { nombre, horarios, enUso } = req.body;
-    
     const categoria = await crearCategoriaService(
         nombre,      
         horarios,
@@ -24,9 +23,7 @@ export const crearCategoria = async (req, res) => {
 };
 
 export const actualizarCategoria = async (req, res) => {
-
     const { id } = req.params;
-
     const categoria = await actualizarCategoriaService(
         id,
         req.body
@@ -35,11 +32,8 @@ export const actualizarCategoria = async (req, res) => {
 };
 
 export const eliminarCategoria = async (req, res) => {
-
     const { id } = req.params;
-
     const categoria = await eliminarCategoriaService(id);
-
     res.status(200).json(categoria);
 };
 

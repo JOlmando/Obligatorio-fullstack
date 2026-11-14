@@ -101,20 +101,15 @@ export const verificarHorarioVisita = async (
     // SALA DE MUSCULACIÓN
     // El usuario hace check-in en el momento.
     if (categoria.nombre === "Sala de musculación") {
-
         const ahora = new Date();
-
         const horaActual = ahora.toLocaleTimeString("es-UY", {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
             timeZone: "America/Montevideo"
         });
-
         const horarioValido = horarios.some((horario) => {
-
             const [horaInicio, horaFin] = horario.split("-");
-
             return horaActual >= horaInicio && horaActual < horaFin;
         });
 
@@ -122,30 +117,23 @@ export const verificarHorarioVisita = async (
             const error = new Error(
                 "La sala de musculación se encuentra fuera de horario"
             );
-
             error.statusCode = 400;
             error.code = "GYM_CLOSED";
-
             throw error;
         }
-
         return;
     }
-
     // FUNCIONAL / CALISTENIA / CROSSFIT
     // La hora debe coincidir exactamente con
     // uno de los bloques definidos en la categoría.
-
     const horarioValido = horarios.includes(hora);
 
     if (!horarioValido) {
         const error = new Error(
             `El horario seleccionado no está disponible para esta actividad: ${categoria.nombre}`
         );
-
         error.statusCode = 400;
         error.code = "INVALID_SCHEDULE";
-
         throw error;
     }
 
@@ -153,23 +141,20 @@ export const verificarHorarioVisita = async (
     // Ejemplo:
     // "10:00-11:15" -> "10:00"
     const [horaInicio] = hora.split("-");
-
     const inicioActividad = new Date(
         `${fecha}T${horaInicio}:00-03:00`
     );
-
     const ahora = new Date();
-
-    const doceHoras = 12 * 60 * 60 * 1000;
+    
+    const doceHoras = 12 * 60 * 60 * 1000; // en milisegundos
 
     // La reserva debe hacerse con al menos
     // 12 horas de anticipación.
-    if (inicioActividad - ahora < doceHoras) {
 
+    if (inicioActividad - ahora < doceHoras) {
         const error = new Error(
             "La reserva debe realizarse con al menos 12 horas de anticipación"
         );
-
         error.statusCode = 400;
         error.code = "LESS_THAN_12_HOURS";
 
@@ -187,24 +172,19 @@ export const crearVisitaService = async (visitaData) => {
 
     if (!categoria) {
         const error = new Error("Categoría no encontrada");
-
         error.statusCode = 404;
         error.code = "CATEGORY_NOT_FOUND";
-
         throw error;
     }
 
     // Si es musculación, la fecha y hora
     // salen del momento actual.
     if (categoria.nombre === "Sala de musculación") {
-
         const ahora = new Date();
-
         visitaData.fecha = ahora.toLocaleDateString(
             "en-CA",
             { timeZone: "America/Montevideo" }
         );
-
         visitaData.hora = ahora.toLocaleTimeString(
             "es-UY",
             {
@@ -231,10 +211,8 @@ export const crearVisitaService = async (visitaData) => {
         const error = new Error(
             "El usuario alcanzó el límite de 4 visitas semanales del plan Plus"
         );
-
         error.statusCode = 403;
         error.code = "WEEKLY_LIMIT_REACHED";
-
         throw error;
     }
 
@@ -270,42 +248,37 @@ export const actualizarVisitaService = async (
         usuarioId
     });
 
-
+    const hoy = new Date();
+    // console.log(hoy)
+    // if (visita.fecha < ) {
+    //     const error = new Error("No se puede modificar una visita pasada.");
+    //     error.statusCode = 409;
+    //     error.code = "VISIT_NOT_FOUND";
+    //     throw error;
+    // }
 
     if (!visita) {
         const error = new Error("Visita no encontrada");
-
         error.statusCode = 404;
         error.code = "VISIT_NOT_FOUND";
-
         throw error;
     }
-
 
     const categoria = await Categoria.findById(
         nuevosDatos.categoriaId
     );
 
-
-
     if (!categoria) {
         const error = new Error("Categoría no encontrada");
-
         error.statusCode = 404;
         error.code = "CATEGORY_NOT_FOUND";
-
         throw error;
     }
 
     const categoriaActual = await Categoria.findById(visita.categoriaId);
-
     const nombereCategoriaActual = categoriaActual.nombre;
-
     const nombereCategoriaNueva = categoria.nombre;
 
-    console.log("nombereCategoriaActual:", nombereCategoriaActual);
-
-    console.log("nombereCategoriaNueva:", nombereCategoriaNueva);
 
     if (nombereCategoriaActual === "Sala de musculación" || nombereCategoriaNueva === "Sala de musculación") {
         const error = new Error(
