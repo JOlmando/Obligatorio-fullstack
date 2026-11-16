@@ -248,14 +248,22 @@ export const actualizarVisitaService = async (
         usuarioId
     });
 
+    console.log(visita.fecha)
+
     const hoy = new Date();
-    // console.log(hoy)
-    // if (visita.fecha < ) {
-    //     const error = new Error("No se puede modificar una visita pasada.");
-    //     error.statusCode = 409;
-    //     error.code = "VISIT_NOT_FOUND";
-    //     throw error;
-    // }
+    const hoyFecha = [
+            hoy.getFullYear(),                            // Año, por ejemplo 2026
+            String(hoy.getMonth() + 1).padStart(2, "0"), // Mes: Date cuenta desde 0, por eso +1
+            String(hoy.getDate()).padStart(2, "0"),      // Día del mes
+            ].join("-");
+
+   
+    if (visita.fecha < hoyFecha) {
+        const error = new Error("No se puede modificar una visita pasada.");
+        error.statusCode = 409;
+        error.code = "VISIT_NOT_FOUND";
+        throw error;
+    }
 
     if (!visita) {
         const error = new Error("Visita no encontrada");
